@@ -1,3 +1,16 @@
+APIs used in this project:
+
+Lyrics:
+https://lyrics.ovh/
+
+Translation:
+https://libretranslate.com/
+
+
+
+
+
+
 Installed:
 
 Install-Package System.Text.Json for parsing through json

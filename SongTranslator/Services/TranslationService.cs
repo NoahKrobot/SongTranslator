@@ -9,6 +9,7 @@ namespace SongTranslator.Services
     public class TranslationService
     {
 
+        static readonly string Translation_API_URL = "https://api.lyrics.ovh/v1/";
         static readonly string languagesData = "Services/languages.json";
         public async Task<List<LanguagesData>> GetLanguagesToList()
         {
@@ -30,6 +31,8 @@ namespace SongTranslator.Services
             
             return languageData;
         }
+
+
     }
 
   
