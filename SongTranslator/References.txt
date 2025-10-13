@@ -1,0 +1,12 @@
+Installed 
+
+Install-Package System.Text.Json for parsing through json
+
+
+Async function:
+
+https://stackoverflow.com/questions/58358900/calling-async-methods-in-blazor-view
+
+response.Content:
+
+https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpresponsemessage?view=net-9.0
