@@ -12,3 +12,11 @@ https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpresponsemessage
 
 Json formatter:
 https://stackoverflow.com/questions/4580397/json-formatter-in-c
+
+
+Languages file:
+
+GET https://libretranslate.com/languages
+
+file parsing:
+https://learn.microsoft.com/en-us/dotnet/api/system.io.file.readalltextasync?view=net-9.0
