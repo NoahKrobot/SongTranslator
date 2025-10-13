@@ -1,6 +1,11 @@
 ﻿using RestSharp;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using static System.Net.WebRequestMethods;
+using System;
+
 namespace SongTranslator.Services
 {
     public class FetchLyricsService
@@ -12,14 +17,32 @@ namespace SongTranslator.Services
             var client = new RestClient(Lyrics_URL);
             var request = new RestRequest($"{artist}/{title}");
 
-            var response = await client.ExecuteAsync(request);
+            var responseLyrics = await client.ExecuteAsync(request);
 
-            if (response.Content == null)
+            if (responseLyrics.Content == null)
             {
                 return "Response is null";
             }
 
-            return response.Content;
+            var data = JsonConvert.DeserializeObject<Lyric>(responseLyrics.Content);
+
+
+            if (data == null)
+            {
+                return "Response is null";
+            }
+
+            if (data.lyrics == null)
+            {
+                return "Response is null";
+            }
+
+            return data.lyrics;
         }
+    }
+    public class Lyric
+    {
+        [JsonProperty("lyrics")]
+        public string ?lyrics { get; set; }
     }
 }

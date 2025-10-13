@@ -1,4 +1,7 @@
 ﻿@using SongTranslator.Services
+@using System.Text.Json;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
 
 <h3>Get Song Lyrics</h3>
 
@@ -6,7 +9,6 @@
 <input @bind="title" placeholder="Song title" />
 <button @onclick="FetchLyrics">Fetch Lyrics</button>
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
 
 
 <p>@lyrics</p>
@@ -31,10 +33,7 @@
 
         Console.WriteLine("clicked");
         lyrics = await lyricsService.LyricsTextAsync(artist, title);
-
-        Console.WriteLine(lyrics);
     }
-
 
     private void IncrementCount()
     {
