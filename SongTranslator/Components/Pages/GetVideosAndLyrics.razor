@@ -1,0 +1,180 @@
+﻿@using SongTranslator.Services
+@using SongTranslator.Components.Data
+@using System.Text.Json;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
+
+@using Google.Apis.YouTube.v3
+@inject Google.Apis.YouTube.v3.YouTubeService YouTubeService
+
+<div class="input-group mb-3">
+    <input @bind="artistName" class="form-control" placeholder="Artist Name" />
+    <input @bind="songName" class="form-control" placeholder="Song Name" />
+    <button class="btn btn-primary" @onclick="GetResult">Search</button>
+</div>
+
+
+<p>@errorMessageYoutube</p>
+<p>@errorMessageLyrics</p>
+<p>@errorMessageInput</p>
+
+
+@if (loading)
+{
+    <div>
+        <p>Loading...</p>
+    </div>
+}
+
+@* Display video *@
+@if (videos.Any())
+{
+    <h2>Now playing:</h2>
+    <div>
+        <iframe width="640" height="360"
+                src="https://www.youtube.com/embed/@videos.First().VideoId?autoplay=1"
+                frameborder="0" />
+    </div>
+}
+
+@* Display lyrics *@
+@if (!lyrics.Equals("Response is null") && !string.IsNullOrEmpty(lyrics))
+{
+    <h3>LYRICS:</h3>
+    <div>
+        <p>@lyrics</p>
+    </div>
+}
+
+@* Display recommended videos *@
+
+@if (videos.Any())
+{
+    <h3 class="display-4">Recommended:</h3>
+    <div class="row">
+        @foreach (var video in videos.Skip(1))
+        {
+            <div class="col">
+                <figure class="figure">
+                    <a href="https://www.youtube.com/watch?v=@video.VideoId" title="@video.Title">
+                        <img src="@video.Thumbnail" class="figure-img img-fluid rounded" alt="@video.Title">
+                    </a>
+                    <figcaption class="figure-caption">@video.Title</figcaption>
+                </figure>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private FetchLyricsService lyricsService = new FetchLyricsService();
+    private List<YouTubeVideo> videos = new List<YouTubeVideo>();
+
+    private string artistName = "";
+    private string songName = "";
+    private string searchQuery = "";
+
+    private string lyrics = "";
+
+    private string errorMessageYoutube;
+    private string errorMessageLyrics;
+    private string errorMessageInput;
+
+    private bool loading = false;
+
+    private async Task SearchYouTube()
+    {
+        videos.Clear();
+
+        try
+        {
+            searchQuery = artistName + " " + songName;
+            var searchListRequest = YouTubeService.Search.List("snippet");
+            searchListRequest.Q = searchQuery;
+            searchListRequest.Type = "video";
+            searchListRequest.MaxResults = 6;
+            searchListRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
+
+
+            searchListRequest.Order = Google.Apis.YouTube.v3.SearchResource.ListRequest.OrderEnum.Relevance;
+
+            var searchListResponse = await searchListRequest.ExecuteAsync();
+
+            if (searchListResponse.Items == null || !searchListResponse.Items.Any())
+            {
+                errorMessageYoutube = "Hmm... No Youtube results found for this song.";
+                return;
+            }
+
+            videos.AddRange(searchListResponse.Items.Select(video => new YouTubeVideo
+                {
+                    Thumbnail = video.Snippet.Thumbnails?.High?.Url ?? "",
+                    Title = video.Snippet.Title,
+                    VideoId = video.Id.VideoId,
+                }));
+        }
+        catch (Exception ex)
+        {
+            errorMessageYoutube = ex.Message;
+        }
+    }
+
+
+    private async Task FetchLyrics()
+    {
+        // debugMessage = "clicked";
+        Console.WriteLine("clicked");
+        try
+        {
+            lyrics = await lyricsService.LyricsTextAsync(artistName, songName);
+
+            if (string.IsNullOrEmpty(lyrics) || lyrics.Equals("Response is null"))
+            {
+                errorMessageLyrics = "Hmm... No lyrics found for this song.";
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessageLyrics = ex.Message;
+        }
+    }
+
+    private bool ValidateInput()
+    {
+        if (string.IsNullOrEmpty(artistName) || string.IsNullOrEmpty(songName))
+        {
+            errorMessageInput = "Search must be filled in.";
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    private async Task GetResult()
+    {
+        errorMessageInput = null;
+        errorMessageYoutube = null;
+        errorMessageLyrics = null;
+
+        if (ValidateInput())
+        {
+            try
+            {
+                loading = true;
+                await SearchYouTube();
+                await FetchLyrics();
+            }
+            finally
+            {
+                loading = false;
+            }
+        }
+        else
+        {
+            return;
+        }
+    }
+}

@@ -24,6 +24,7 @@ builder.Services.AddSingleton(new YouTubeService(new BaseClientService.Initializ
     ApplicationName = appName,
 }));
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
