@@ -3,9 +3,8 @@ APIs used in this project:
 Lyrics:
 https://lyrics.ovh
 
-Music:
-
-https://developer.jamendo.com/v3.0
+YouTube:
+https://developers.google.com/youtube/v3
 
 
 
@@ -57,8 +56,9 @@ playing a single video:
 https://developers.google.com/youtube/player_parameters
 
 
-
-
 Referencing from appsettings.json:
 https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-9.0#default-application-configuration-sources
 
+
+Cancel task after a period of time:
+https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/cancel-async-tasks-after-a-period-of-time

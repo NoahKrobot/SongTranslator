@@ -27,16 +27,10 @@ namespace SongTranslator.Services
             var data = JsonConvert.DeserializeObject<Lyric>(responseLyrics.Content);
 
 
-            if (data == null)
+            if (data == null || data.lyrics == null)
             {
                 return "Response is null";
             }
-
-            if (data.lyrics == null)
-            {
-                return "Response is null";
-            }
-
             return data.lyrics;
         }
     }
