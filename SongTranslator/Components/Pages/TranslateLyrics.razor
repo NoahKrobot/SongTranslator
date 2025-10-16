@@ -1,4 +1,5 @@
 ﻿@using SongTranslator.Services
+@using SongTranslator.Components.Constants
 @using SongTranslator.Components.Data;
 
 
@@ -6,32 +7,8 @@
 
 <div>
     <h3>Options:</h3>
-
-    @if(languages == null){
-        <p>Loading languages...</p>
-    }else{
-        <select @bind="choosenLanguage">
-            <option value="">Select a language: </option>
-            @foreach(var language in languages){
-                <option value="@language.Name">@language.Name</option>
-            }
-        </select>
-    }
-
 </div>
 
 @code {
-
-    private List<LanguagesData>? languages;
-    private string choosenLanguage = "";
-    private TranslationService translator = new TranslationService();
-
-    protected override async Task OnInitializedAsync()
-    {
-        languages = await translator.GetLanguagesToList();
-        Console.WriteLine(languages);
-        Console.WriteLine("Here");
-
-    }
 
 }

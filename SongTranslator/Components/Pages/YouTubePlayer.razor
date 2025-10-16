@@ -1,0 +1,107 @@
+﻿@using Google.Apis.YouTube.v3
+@inject Google.Apis.YouTube.v3.YouTubeService YouTubeService
+
+<div class="input-group mb-3">
+    <input @bind="artistName" class="form-control" placeholder="Artist Name" />
+    <input @bind="songName" class="form-control" placeholder="Song Name" />
+    <button class="btn btn-primary" @onclick="SearchYouTube">Search</button>
+</div>
+
+
+@if (videos.Any())
+{
+
+    <h2>Now playing:</h2>
+    <div>
+        <iframe width="640" height="360"
+        src="https://www.youtube.com/embed/@videos.First().VideoId?autoplay=1"
+        frameborder="0"
+        />
+    </div>
+
+}
+else if (!string.IsNullOrEmpty(errorMessage)){
+    <p>@errorMessage</p>
+}
+
+
+@if (videos.Any())
+{
+    <h3 class="display-4">Recommended:</h3>
+    <div class="row">
+        @foreach (var video in videos)
+        {
+            <div class="col">
+                <figure class="figure">
+                    <a href="https://www.youtube.com/watch?v=@video.VideoId" title="@video.Title">
+                        <img src="@video.Thumbnail" class="figure-img img-fluid rounded" alt="@video.Title">
+                    </a>
+                    <figcaption class="figure-caption">@video.Title</figcaption>
+                </figure>
+            </div>
+        }
+    </div>
+
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <p>@errorMessage</p>
+}
+
+
+@code {
+    private string artistName = "";
+    private string songName = "";
+
+
+    private string searchQuery = "";
+    private List<YouTubeVideo> videos = new List<YouTubeVideo>();
+    private string errorMessage;
+
+    private async Task SearchYouTube()
+    {
+
+        if (string.IsNullOrEmpty(artistName) || string.IsNullOrEmpty(songName)){
+            errorMessage = "Search must be filled in.";
+            return;
+        }
+
+        videos.Clear();
+
+        try{
+            searchQuery = artistName + " " + songName;
+            var searchListRequest = YouTubeService.Search.List("snippet");
+            searchListRequest.Q = searchQuery;
+            searchListRequest.Type = "video";
+            searchListRequest.MaxResults = 6;
+            searchListRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
+
+
+            searchListRequest.Order = Google.Apis.YouTube.v3.SearchResource.ListRequest.OrderEnum.Relevance;
+
+            var searchListResponse = await searchListRequest.ExecuteAsync();
+
+
+            videos.AddRange(searchListResponse.Items.Select(video => new YouTubeVideo
+                {
+                    Thumbnail = video.Snippet.Thumbnails?.High?.Url ?? "",
+                    Title = video.Snippet.Title,
+                    VideoId = video.Id.VideoId,
+                }));
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+
+
+
+    }
+
+    public class YouTubeVideo
+    {
+        public string Thumbnail { get; set; }
+        public string Title { get; set; }
+        public string VideoId { get; set; }
+    }
+}
