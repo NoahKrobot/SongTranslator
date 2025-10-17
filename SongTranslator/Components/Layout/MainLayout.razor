@@ -1,14 +1,43 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="hero_mob_img">
+    <img src="Images/HeroMOB_img.jpg" alt="Hero Image" />
+</div>
 
+<div class="hero_pc_img">
+    <img src="Images/HeroPC_img.jpg" alt="Hero Image" />
+</div>
+
+<div class="hero_pc_video">
+    <video autoplay muted loop playsinline class="hero_video_pc">
+        <source src="Videos/Hero_Video_PC.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<div class="hero_mob_video">
+    <video autoplay muted loop playsinline class="hero_video_mob">
+        <source src="Videos/Hero_vid_mob.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+@* <div class="hero_mob_video"> *@
+@*     <video autoplay muted loop playsinline class="hero_video_pc"> *@
+@*         <source src="Videos/Hero_Video_PC.mp4" type="video/mp4" /> *@
+@*         Your browser does not support the video tag. *@
+@*     </video> *@
+@* </div> *@
+
+<div class="page">
+    @* <div class="sidebar"> *@
+    @*     <NavMenu /> *@
+    @* </div> *@
+ 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+        @* <div class="top-row px-4"> *@
+        @*     <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a> *@
+        @* </div> *@
 
         <article class="content px-4">
             @Body
@@ -21,3 +50,88 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+<style>
+ 
+    .page{
+        background: #ff6b00;
+        min-height: 100vh;
+    }
+
+    .hero_video_pc{
+        display: block;
+        width: 100%;
+    }
+
+    .hero_video_mob {
+        display: none;
+    }
+
+    .hero_pc_img {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        filter: blur(10px);
+        opacity: 0;
+        animation: blurFadeIn 1s ease forwards;
+        box-shadow: 1px 7px 11px -10px rgba(0, 0, 0, 1);
+    }
+
+        .hero_pc_img img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+            max-height: 100vh;
+        }
+
+   
+    .hero_mob_img {
+        display: none;
+    }
+
+   
+    @@media (max-width: 768px) {
+        .hero_video_mob {
+            display: block;
+            width: 100%;
+        }
+
+        .hero_video_pc {
+            display:none;
+        }
+        .hero_mob_img {
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            filter: blur(10px);
+            opacity: 0;
+            animation: blurFadeIn 1s ease forwards;
+            box-shadow: 1px 7px 11px -10px rgba(0, 0, 0, 1);
+        }
+
+            .hero_mob_img img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+                display: block;
+                max-height: 100vh;
+            }
+
+        .hero_pc_img {
+            display: none;
+        }
+    }
+
+    
+    @@keyframes blurFadeIn {
+        0% {
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        100% {
+            opacity: 1;
+            filter: blur(0);
+        }
+    }
+</style>
