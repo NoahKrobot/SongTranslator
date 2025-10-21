@@ -86,12 +86,12 @@
         <div>
             <h4>TITLE: @media.Title</h4>
 
-            @if (media.Source == "YouTube" && media is YouTubeVideo video)
+            @if (media.Source == MediaSourceEnum.YouTubeVideo && media is YouTubeVideo video)
             {
                 <h4>Youtube Video url: @video.Url</h4>
             }
 
-            @if (media.Source == "Lyrics" && media is SongLyrics lyrics)
+            @if (media.Source == MediaSourceEnum.Lyrics && media is SongLyrics lyrics)
             {
                 <p>@lyrics.Lyrics</p>
             }
@@ -149,7 +149,7 @@
                     Title = video.Snippet.Title,
                     Thumbnail = video.Snippet.Thumbnails?.High?.Url ?? "",
                     VideoId = video.Id.VideoId,
-                    Source = "YouTube"
+                    Source = MediaSourceEnum.YouTubeVideo
                 }));
 
             fetchedLyricsVideo.AddRange(videos);
@@ -185,7 +185,7 @@
                     SongName = songName,
                     Lyrics = lyrics,
                     Title = songName,
-                    Source = "Lyrics"
+                    Source = MediaSourceEnum.Lyrics
                 };
 
             fetchedLyricsVideo.Add(singleSongLyrics);
@@ -246,8 +246,4 @@
             return;
         }
     }
-
-
-
-
 }

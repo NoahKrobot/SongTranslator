@@ -1,10 +1,12 @@
-﻿namespace SongTranslator.Components.Data
+﻿using static SongTranslator.Components.Data.MediaSourceEnum;
+
+namespace SongTranslator.Components.Data
 {
 
     //abstraction used for Firebase
     public abstract class MediaData
     {
-        public string Source { get; set; }
+        public MediaSourceEnum Source { get; set; }
         public string Title { get; set; }
     }
 
