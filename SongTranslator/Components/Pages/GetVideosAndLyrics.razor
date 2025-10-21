@@ -18,7 +18,6 @@
 <p>@errorMessageLyrics</p>
 <p>@errorMessageInput</p>
 
-
 @if (loading)
 {
     <div>
@@ -26,25 +25,37 @@
     </div>
 }
 
+<div class="video-lyrics-container">
+
 @* Display video *@
 @if (videos.Any())
 {
-    <h2>Now playing:</h2>
     <div class="single-video-box">
         <iframe width="640" height="360"
         src="https://www.youtube.com/embed/@videos.First().VideoId?autoplay=1"
         frameborder="0" />
     </div>
 }
+else
+{
+    <div class="single-video-box-placeholder">
+        <p>No video here yet :D</p>
+    </div>
+}
 
 @* Display lyrics *@
 @if (!lyrics.Equals("Response is null") && !string.IsNullOrEmpty(lyrics))
 {
-    <h3>LYRICS:</h3>
-    <div>
+   
+    <div class="lyrics-container">
         <p>@lyrics</p>
     </div>
+}else{
+        <div class="lyrics-box-placeholder">
+            <p>No lyrics here yet :D</p>
+        </div>
 }
+</div>
 
 @* Display recommended videos *@
 
@@ -111,7 +122,6 @@
             videos.AddRange(searchListResponse.Items.Select(video => new YouTubeVideo
                 {
                     Thumbnail = video.Snippet.Thumbnails?.High?.Url ?? "",
-                    Title = video.Snippet.Title,
                     VideoId = video.Id.VideoId,
                 }));
         }
@@ -131,15 +141,19 @@
 
             lyrics = await lyricsService.LyricsTextAsync(artistName, songName);
 
-            if (string.IsNullOrEmpty(lyrics) || lyrics.Equals("Response is null") || lyrics.Contains("Unexpected character encountered"))
+            if (string.IsNullOrEmpty(lyrics) || lyrics.Equals("Response is null") || lyrics.Equals("Unexpected character encountered while parsing value: <. Path '', line 0, position 0."))
             {
+                
+                lyrics = "Hmm... No lyrics found for this song.";
                 errorMessageLyrics = "Hmm... No lyrics found for this song.";
                 return;
             }
         }
         catch (Exception ex)
         {
-            errorMessageLyrics = ex.Message;
+            // errorMessageLyrics = ex.Message;
+            lyrics = "Hmm... No lyrics found for this song.";
+
         }
     }
 

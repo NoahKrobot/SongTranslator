@@ -1,13 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="SongTranslator.styles.css" />
+    <link href="~/app.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <HeadOutlet />
 </head>
@@ -16,5 +16,103 @@
     <Routes />
     <script src="_framework/blazor.web.js"></script>
 </body>
+
+<style>
+
+
+    .video-lyrics-container {
+        display: flex;
+        width: 100%;
+        justify-content: space-evenly;
+        align-items: center;
+        margin-top: 10vh;
+    }
+
+    .single-video-box-placeholder,
+    .lyrics-container,
+    .lyrics-box-placeholder {
+        width: 45%; 
+        max-width: 640px; 
+
+        /*Aspect ratio taken from: https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio */
+        aspect-ratio: 16 / 9; 
+        background-color: #f2f2f2;
+        border: 3px dashed #ff6d02;
+        color: gray;
+        font-size: 1.4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5vh;
+        animation: fadeInUp 2s ease forwards;
+    }
+
+    .lyrics-container {
+        width: 45%;
+        max-width: 640px;
+        max-height: 360px;
+        aspect-ratio: 16 / 9;
+        background-color: #f2f2f2;
+        border: 3px dashed #ff6d02;
+        color: #555;
+        font-size: 1.2rem;
+        padding: 1.5vh 2vw;
+        animation: fadeInUp 2s ease forwards;
+        display: block;
+        white-space: pre-wrap; 
+        word-wrap: break-word; 
+        line-height: 1.5;
+        text-align: left;
+        font-family: sans-serif;
+        overflow-y: auto; 
+    }
+
+    .single-video-box {
+        opacity: 0;
+        transform: translateY(-20px);
+        animation: fadeInUp 2s ease forwards;
+    }
+
+    @@keyframes fadeInUp {
+        to
+
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .video-lyrics-container
+
+    {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 5vh;
+    }
+
+    .single-video-box-placeholder,
+    .lyrics-container,
+    .lyrics-box-placeholder {
+        width: 90%;
+        max-width: 100%;
+        min-width: unset;
+        min-height: 200px;
+        max-height: none;
+        font-size: 1rem;
+        padding: 15px;
+    }
+
+    .lyrics-container,
+    .lyrics-box-placeholder {
+        margin-top: 20px;
+    }
+
+    }
+
+</style>
 
 </html>
