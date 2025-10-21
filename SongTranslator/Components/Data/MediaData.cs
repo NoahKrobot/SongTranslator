@@ -4,10 +4,8 @@
     //abstraction used for Firebase
     public abstract class MediaData
     {
-        public string Title { get; set; }
         public string Source { get; set; }
-        public DateTime RetrievedAt { get; set; } = DateTime.UtcNow;
-
+        public string Title { get; set; }
     }
 
     //public class MediaData

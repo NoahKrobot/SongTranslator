@@ -62,3 +62,7 @@ https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=a
 
 Cancel task after a period of time:
 https://learn.microsoft.com/en-us/dotnet/csharp/asynchronous-programming/cancel-async-tasks-after-a-period-of-time
+
+
+Abstract class pattern matching:
+https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/patterns

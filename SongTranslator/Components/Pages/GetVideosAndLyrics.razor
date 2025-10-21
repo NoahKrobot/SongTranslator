@@ -27,34 +27,34 @@
 
 <div class="video-lyrics-container">
 
-@* Display video *@
-@if (videos.Any())
-{
-    <div class="single-video-box">
-        <iframe width="640" height="360"
-        src="https://www.youtube.com/embed/@videos.First().VideoId?autoplay=1"
-        frameborder="0" />
-    </div>
-}
-else
-{
-    <div class="single-video-box-placeholder">
-        <p>No video here yet :D</p>
-    </div>
-}
+    @* Display video *@
+    @if (videos.Any())
+    {
+        <div class="single-video-box">
+            <iframe width="640" height="360"
+            src="https://www.youtube.com/embed/@videos.First().VideoId?autoplay=1"
+            frameborder="0" />
+        </div>
+    }
+    else
+    {
+        <div class="single-video-box-placeholder">
+            <p>No video here yet :D</p>
+        </div>
+    }
 
-@* Display lyrics *@
-@if (!lyrics.Equals("Response is null") && !string.IsNullOrEmpty(lyrics))
-{
-   
-    <div class="lyrics-container">
-        <p>@lyrics</p>
-    </div>
-}else{
+    @* Display lyrics *@
+    @if (!lyrics.Equals("Response is null") && !string.IsNullOrEmpty(lyrics))
+    {
+
+        <div class="lyrics-container">
+            <p>@lyrics</p>
+        </div>
+    }else{
         <div class="lyrics-box-placeholder">
             <p>No lyrics here yet :D</p>
         </div>
-}
+    }
 </div>
 
 @* Display recommended videos *@
@@ -77,9 +77,34 @@ else
     </div>
 }
 
+
+
+
+<div>
+    @foreach (var media in fetchedLyricsVideo)
+    {
+        <div>
+            <h4>TITLE: @media.Title</h4>
+
+            @if (media.Source == "YouTube" && media is YouTubeVideo video)
+            {
+                <h4>Youtube Video url: @video.Url</h4>
+            }
+
+            @if (media.Source == "Lyrics" && media is SongLyrics lyrics)
+            {
+                <p>@lyrics.Lyrics</p>
+            }
+        </div>
+    }
+</div>
+
+
 @code {
     private FetchLyricsService lyricsService = new FetchLyricsService();
     private List<YouTubeVideo> videos = new List<YouTubeVideo>();
+
+    private List<MediaData> fetchedLyricsVideo = new List<MediaData>();
 
     private string artistName = "";
     private string songName = "";
@@ -121,9 +146,14 @@ else
 
             videos.AddRange(searchListResponse.Items.Select(video => new YouTubeVideo
                 {
+                    Title = video.Snippet.Title,
                     Thumbnail = video.Snippet.Thumbnails?.High?.Url ?? "",
                     VideoId = video.Id.VideoId,
+                    Source = "YouTube"
                 }));
+
+            fetchedLyricsVideo.AddRange(videos);
+
         }
         catch (Exception ex)
         {
@@ -143,11 +173,22 @@ else
 
             if (string.IsNullOrEmpty(lyrics) || lyrics.Equals("Response is null") || lyrics.Equals("Unexpected character encountered while parsing value: <. Path '', line 0, position 0."))
             {
-                
+
                 lyrics = "Hmm... No lyrics found for this song.";
                 errorMessageLyrics = "Hmm... No lyrics found for this song.";
                 return;
             }
+
+            var singleSongLyrics = new SongLyrics
+                {
+                    Artist = artistName,
+                    SongName = songName,
+                    Lyrics = lyrics,
+                    Title = songName,
+                    Source = "Lyrics"
+                };
+
+            fetchedLyricsVideo.Add(singleSongLyrics);
         }
         catch (Exception ex)
         {
@@ -176,8 +217,8 @@ else
         errorMessageYoutube = "";
         errorMessageLyrics = "";
         lyrics = "";
+        videos.Clear();
 
-       
 
         if (ValidateInput())
         {
@@ -189,7 +230,6 @@ else
 
                 await FetchLyrics();
                 StateHasChanged();
-
 
             }
             finally
@@ -206,4 +246,8 @@ else
             return;
         }
     }
+
+
+
+
 }
