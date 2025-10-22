@@ -245,11 +245,11 @@
 
     private void SortByTitleAscending()
     {
-        fetchedLyricsVideo = fetchedLyricsVideo.OrderBy(m => m.Title ?? string.Empty).ToList();
+        fetchedLyricsVideo = IMediaFetchService.SortListAscending(fetchedLyricsVideo);
     }
 
     private void SortByTitleDescending()
     {
-        fetchedLyricsVideo = fetchedLyricsVideo.OrderByDescending(m => m.Title ?? string.Empty).ToList();
+        fetchedLyricsVideo = IMediaFetchService.SortListDescending(fetchedLyricsVideo);
     }
 }

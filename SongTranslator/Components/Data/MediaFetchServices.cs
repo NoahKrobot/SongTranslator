@@ -4,9 +4,22 @@ using SongTranslator.Components.Data;
 
 namespace SongTranslator.Components.Data
 {
-
     public class MediaFetchServices : IMediaFetchService
     {
+        public List<MediaData> SortListAscending(List<MediaData> fetchedLyricsVideo)
+        {
+
+            fetchedLyricsVideo = fetchedLyricsVideo.OrderBy(m => m.Title ?? string.Empty).ToList();
+
+            return fetchedLyricsVideo;
+        }
+
+        public List<MediaData> SortListDescending(List<MediaData> fetchedLyricsVideo)
+        {
+            fetchedLyricsVideo = fetchedLyricsVideo.OrderByDescending(m => m.Title ?? string.Empty).ToList();
+
+            return fetchedLyricsVideo;
+        }
 
         public bool ValidateInput(string artist, string song)
         {
@@ -19,7 +32,5 @@ namespace SongTranslator.Components.Data
                 return true;
             }
         }
-
-
     }
 }
