@@ -81,10 +81,10 @@
 @if (fetchedLyricsVideo.Any()){
     <div>
         <div class="mb-3">
-            <button class="btn btn-secondary me-2" @onclick="SortByTitleAscending">
+            <button class="btn btn-secondary me-2" @onclick="SortByTitleDescending">
                 Lyrics first
             </button>
-            <button class="btn btn-secondary" @onclick="SortByTitleDescending">
+            <button class="btn btn-secondary" @onclick="SortByTitleAscending">
                 Songs first
             </button>
         </div>
@@ -93,7 +93,7 @@
         @foreach (var media in fetchedLyricsVideo)
         {
             <div>
-                <h4>TITLE: @media.Title</h4>
+                <h4>@media.Title</h4>
 
                 @if (media.Source == MediaSourceEnum.YouTubeVideo && media is YouTubeVideo video)
                 {
@@ -192,7 +192,7 @@
                     Artist = artistName,
                     SongName = songName,
                     Lyrics = lyrics,
-                    Title = songName,
+                    Title = artistName + ": "+songName +" - lyrics",
                     Source = MediaSourceEnum.Lyrics
                 };
 
