@@ -2,7 +2,7 @@
 
 namespace TestProject1
 {
-    public class SortList_Ascending_Test
+    public class SortList_Descending_Test
     {
         private MediaFetchServices? mediaService;
 
@@ -15,17 +15,17 @@ namespace TestProject1
         /*
           * TEST CASES:
           * 
-          * 1: Three words: "Crawling", "Betrayer", "Duality" -> returns:  Betrayer, Crawling, Duality
-          * 2: Different caps three words: "Crawling", "duality", "betrayer"  -> returns betrayer, Crawling, duality
+          * 1: Three words: "Crawling", "Betrayer", "Duality" -> returns:  Duality,  Crawling, Betrayer,
+          * 2: Different caps three words: "Crawling", "duality", "betrayer"  -> returns  Duality,  Crawling, Betrayer,
           * 3: Empty list -> returns empty
           * 4: Null list -> returns empty or same null-safe list
-          * 5: Duplicates: Betrayer, Broken Cog, Betrayer,  -> return Betrayer, Betrayer, Broken Cog
+          * 5: Duplicates: Betrayer, Broken Cog, Betrayer,  -> return Broken Cog, Betrayer, Betrayer, 
         */
 
         [Test]
         public void ThreeWords_ExpectedAlphabeticalOrder()
         {
-           List<MediaData> songs = new List<MediaData>();
+            List<MediaData> songs = new List<MediaData>();
             YouTubeVideo y1 = new YouTubeVideo { Title = "Betrayer" };
             YouTubeVideo y2 = new YouTubeVideo { Title = "Crawling" };
             YouTubeVideo y3 = new YouTubeVideo { Title = "Duality" };
@@ -33,11 +33,11 @@ namespace TestProject1
             songs.Add(y2);
             songs.Add(y3);
 
-            var sorted = mediaService.SortListAscending(songs);
+            var sorted = mediaService.SortListDescending(songs);
 
-            Assert.That(sorted[0].Title, Is.EqualTo("Betrayer"));
+            Assert.That(sorted[2].Title, Is.EqualTo("Betrayer"));
             Assert.That(sorted[1].Title, Is.EqualTo("Crawling"));
-            Assert.That(sorted[2].Title, Is.EqualTo("Duality"));
+            Assert.That(sorted[0].Title, Is.EqualTo("Duality"));
         }
 
 
@@ -52,11 +52,11 @@ namespace TestProject1
             songs.Add(y2);
             songs.Add(y3);
 
-            var sorted = mediaService.SortListAscending(songs);
+            var sorted = mediaService.SortListDescending(songs);
 
-            Assert.That(sorted[0].Title, Is.EqualTo("betrayer"));
+            Assert.That(sorted[2].Title, Is.EqualTo("betrayer"));
             Assert.That(sorted[1].Title, Is.EqualTo("Crawling"));
-            Assert.That(sorted[2].Title, Is.EqualTo("duality"));
+            Assert.That(sorted[0].Title, Is.EqualTo("duality"));
         }
 
 
@@ -65,7 +65,7 @@ namespace TestProject1
         {
             List<MediaData> songs = new List<MediaData>();
 
-            var sorted = mediaService.SortListAscending(songs);
+            var sorted = mediaService.SortListDescending(songs);
 
             Assert.That(sorted, Is.Empty);
         }
@@ -76,7 +76,7 @@ namespace TestProject1
         {
             List<MediaData> songs = null;
 
-            var sorted = mediaService.SortListAscending(songs);
+            var sorted = mediaService.SortListDescending(songs);
 
             Assert.That(sorted, Is.Empty);
         }
@@ -93,11 +93,11 @@ namespace TestProject1
             songs.Add(y2);
             songs.Add(y3);
 
-            var sorted = mediaService.SortListAscending(songs);
+            var sorted = mediaService.SortListDescending(songs);
 
-            Assert.That(sorted[0].Title, Is.EqualTo("Betrayer"));
+            Assert.That(sorted[2].Title, Is.EqualTo("Betrayer"));
             Assert.That(sorted[1].Title, Is.EqualTo("Betrayer"));
-            Assert.That(sorted[2].Title, Is.EqualTo("Broken Cog"));
+            Assert.That(sorted[0].Title, Is.EqualTo("Broken Cog"));
         }
 
     }
