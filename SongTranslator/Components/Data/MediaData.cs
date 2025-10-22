@@ -1,4 +1,5 @@
-﻿using static SongTranslator.Components.Data.MediaSourceEnum;
+﻿using System.Collections;
+using static SongTranslator.Components.Data.MediaSourceEnum;
 
 namespace SongTranslator.Components.Data
 {
@@ -24,11 +25,15 @@ namespace SongTranslator.Components.Data
         public string Url => $"https://www.youtube.com/watch?v={VideoId}";
     }
 
-    public class SongLyrics : MediaData
+    public class SongLyrics : MediaData, IMedia
     {
         public string Artist { get; set; }
         public string SongName { get; set; }
         public string Lyrics { get; set; }
 
+        public int GetLyricsLength()
+        {
+            return Lyrics.Length;
+        }
     }
 }
