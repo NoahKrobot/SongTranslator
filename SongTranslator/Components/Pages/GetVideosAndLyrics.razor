@@ -6,6 +6,7 @@
 @using System.Diagnostics;
 @using Google.Apis.YouTube.v3
 @inject Google.Apis.YouTube.v3.YouTubeService YouTubeService
+@inject IMediaFetchService IMediaFetchService
 
 <div class="input-group mb-3">
     <input @bind="artistName" class="form-control" placeholder="Artist Name" />
@@ -77,8 +78,6 @@
     </div>
 }
 
-
-
 @if (fetchedLyricsVideo.Any()){
     <div>
         <div class="mb-3">
@@ -132,7 +131,6 @@
     {
 
         await Task.Delay(300);
-
 
         try
         {
@@ -208,19 +206,6 @@
         }
     }
 
-    private bool ValidateInput()
-    {
-        if (string.IsNullOrEmpty(artistName) || string.IsNullOrEmpty(songName))
-        {
-            errorMessageInput = "Search must be filled in.";
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
     private async Task GetResult()
     {
         errorMessageInput = "";
@@ -229,7 +214,7 @@
         lyrics = "";
         videos.Clear();
 
-        if (ValidateInput())
+        if (IMediaFetchService.ValidateInput(artistName, songName))
         {
             try
             {
@@ -253,16 +238,15 @@
         }
         else
         {
+            errorMessageInput = "Search must be filled in.";
             return;
         }
     }
-
 
     private void SortByTitleAscending()
     {
         fetchedLyricsVideo = fetchedLyricsVideo.OrderBy(m => m.Title ?? string.Empty).ToList();
     }
-
 
     private void SortByTitleDescending()
     {

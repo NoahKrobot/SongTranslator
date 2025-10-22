@@ -2,6 +2,7 @@ using SongTranslator.Components;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using SongTranslator.Components.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<IMediaFetchService, MediaFetchServices>();
 //var youtubeConfiguration = builder.Configuration.Get("YouTube"); 
 var youtubeConfiguration = builder.Configuration.GetSection("YouTube");
 var apiKey = youtubeConfiguration["ApiKey"];
@@ -23,7 +25,6 @@ builder.Services.AddSingleton(new YouTubeService(new BaseClientService.Initializ
     ApiKey = apiKey,
     ApplicationName = appName,
 }));
-
 
 var app = builder.Build();
 
