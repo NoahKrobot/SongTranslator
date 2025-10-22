@@ -23,7 +23,12 @@ namespace SongTranslator.Components.Data
 
         public bool ValidateInput(string artist, string song)
         {
-            if (string.IsNullOrEmpty(artist) || string.IsNullOrEmpty(song))
+            if (string.IsNullOrEmpty(artist) || string.IsNullOrEmpty(song)
+                ||
+                string.IsNullOrWhiteSpace(artist)
+                ||
+                string.IsNullOrWhiteSpace(song)
+                )
             {
                 return false;
             }
