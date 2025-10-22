@@ -9,6 +9,9 @@ namespace SongTranslator.Components.Data
         public List<MediaData> SortListAscending(List<MediaData> fetchedLyricsVideo)
         {
 
+            if (fetchedLyricsVideo == null)
+                return new List<MediaData>();
+
             fetchedLyricsVideo = fetchedLyricsVideo.OrderBy(m => m.Title ?? string.Empty).ToList();
 
             return fetchedLyricsVideo;
@@ -16,6 +19,11 @@ namespace SongTranslator.Components.Data
 
         public List<MediaData> SortListDescending(List<MediaData> fetchedLyricsVideo)
         {
+
+            if (fetchedLyricsVideo == null)
+                return new List<MediaData>();
+
+
             fetchedLyricsVideo = fetchedLyricsVideo.OrderByDescending(m => m.Title ?? string.Empty).ToList();
 
             return fetchedLyricsVideo;
