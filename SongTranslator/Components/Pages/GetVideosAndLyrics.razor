@@ -8,10 +8,10 @@
 @inject Google.Apis.YouTube.v3.YouTubeService YouTubeService
 @inject IMediaFetchService IMediaFetchService
 
-<div class="input-group mb-3">
+<div class="input-group">
     <input @bind="artistName" class="form-control" placeholder="Artist Name" />
     <input @bind="songName" class="form-control" placeholder="Song Name" />
-    <button class="btn btn-primary" @onclick="GetResult">Search</button>
+    <button class="searchButtonForFetching" @onclick="GetResult">Search</button>
 </div>
 
 
@@ -62,16 +62,16 @@
 
 @if (videos.Any())
 {
-    <h3 class="display-4">Recommended:</h3>
-    <div class="row">
+    <h3 class="display-recommendations">Recommended:</h3>
+    <div class="recommended-videos">
         @foreach (var video in videos.Skip(1))
         {
-            <div class="col">
-                <figure class="figure">
+            <div class="recommendedVideoCard">
+                <figure class="figure-recommended">
                     <a href="https://www.youtube.com/watch?v=@video.VideoId" title="@video.Title">
-                        <img src="@video.Thumbnail" class="figure-img img-fluid rounded" alt="@video.Title">
+                        <img src="@video.Thumbnail" class="recommended-video-thumb" alt="@video.Title">
                     </a>
-                    <figcaption class="figure-caption">@video.Title</figcaption>
+                    <figcaption class="figure-title">@video.Title</figcaption>
                 </figure>
             </div>
         }
