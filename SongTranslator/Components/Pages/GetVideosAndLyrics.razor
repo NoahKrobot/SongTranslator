@@ -15,14 +15,17 @@
 </div>
 
 
-<p>@errorMessageYoutube</p>
-<p>@errorMessageLyrics</p>
-<p>@errorMessageInput</p>
+@* <p>@errorMessageYoutube</p> *@
+@* <p>@errorMessageLyrics</p> *@
+ <div style="display: flex;justify-content: center;">
+    <p class="errorMessageInput">@errorMessageInput</p>
+</div>
+
 
 @if (loading)
 {
-    <div>
-        <p>Loading...</p>
+    <div style="display: flex;justify-content: center;">
+        <span class="loader"></span>
     </div>
 }
 
@@ -40,7 +43,7 @@
     else
     {
         <div class="single-video-box-placeholder">
-            <p>No video here yet :D</p>
+            <p>@youtubeBoxMessage</p>
         </div>
     }
 
@@ -53,64 +56,77 @@
         </div>
     }else{
         <div class="lyrics-box-placeholder">
-            <p>No lyrics here yet :D</p>
+            <p>
+                🎵 No lyrics yet! Search for some 🔍
+            </p>
         </div>
     }
 </div>
 
 @* Display recommended videos *@
 
-@if (videos.Any())
-{
-    <h3 class="display-recommendations">Recommended:</h3>
+
+@if (videos.Any()){
+     <div class="display-recommendations">
+                <h3>Recommended:</h3>
+      </div>
+
     <div class="recommended-videos">
         @foreach (var video in videos.Skip(1))
         {
             <div class="recommendedVideoCard">
-                <figure class="figure-recommended">
-                    <a href="https://www.youtube.com/watch?v=@video.VideoId" title="@video.Title">
-                        <img src="@video.Thumbnail" class="recommended-video-thumb" alt="@video.Title">
+                <figure class="recommendedVideoCardFigure">
+                    <a href="https://www.youtube.com/watch?v=@video.VideoId" title="@video.Title" target="_blank" rel="noopener noreferrer">
+                        <img src="@video.Thumbnail" class="recommendedVideoThumb" alt="@video.Title">
                     </a>
-                    <figcaption class="figure-title">@video.Title</figcaption>
+                    <figcaption class="recommendedVideoTitle">@video.Title</figcaption>
                 </figure>
             </div>
         }
     </div>
 }
 
-@if (fetchedLyricsVideo.Any()){
-    <div>
-        <div class="mb-3">
-            <button class="btn btn-secondary me-2" @onclick="SortByTitleDescending">
-                Lyrics first
-            </button>
-            <button class="btn btn-secondary" @onclick="SortByTitleAscending">
-                Songs first
-            </button>
+
+@if (fetchedLyricsVideo.Any())
+{
+    <div class="fetchedVideoAndLyrics">
+        <div class="lyrics-toolbar">
+            <button class="toggle-btn" @onclick="SortByTitleAscending">Songs first (or A-Z)</button>
+
+            <button class="toggle-btn" @onclick="SortByTitleDescending">Lyrics first (or Z-A)</button>
         </div>
 
+        @* <div class="lyrics-toolbar"> *@
+        @*     <button class="toggle-btn" @onclick="SortByTitleDescending">A-Z</button> *@
+        @*     <button class="toggle-btn" @onclick="SortByTitleAscending">Z-A</button> *@
+        @* </div> *@
 
         @foreach (var media in fetchedLyricsVideo)
         {
-            <div>
-                <h4>@media.Title</h4>
+            <div class="media-card">
+                <h4 class="media-title">@media.Title</h4>
 
                 @if (media.Source == MediaSourceEnum.YouTubeVideo && media is YouTubeVideo video)
                 {
-                    <h4>Youtube Video url: @video.Url</h4>
+                    <a href="@video.Url" target="_blank" class="media-link">
+                        🎵 Click to Listen and Watch on YouTube
+                    </a>
                 }
 
-                @if (media.Source == MediaSourceEnum.Lyrics && media is SongLyrics lyrics)
-                {
-                    <p>@lyrics.Lyrics</p>
+                @if (media.Source == MediaSourceEnum.Lyrics && media is SongLyrics lyrics) 
+                 { 
+                    <div class="lyrics-box"> 
+                        <p>@lyrics.Lyrics</p> 
+                    </div> 
                 }
             </div>
         }
     </div>
 }
 
+
 @code {
-    private FetchLyricsService lyricsService = new FetchLyricsService();
+    private FetchLyricsService lyricsService = new FetchLyricsService(new RestSharp.RestClient("https://api.lyrics.ovh/v1/"));
     private List<YouTubeVideo> videos = new List<YouTubeVideo>();
 
     private List<MediaData> fetchedLyricsVideo = new List<MediaData>();
@@ -120,6 +136,8 @@
     private string searchQuery = "";
 
     private string lyrics = "";
+    private string youtubeBoxMessage = "😎🎵 No video found yet! Try searching 🔍";
+
 
     private string errorMessageYoutube = "";
     private string errorMessageLyrics = "";
@@ -148,7 +166,7 @@
 
             if (searchListResponse.Items == null || !searchListResponse.Items.Any() )
             {
-                errorMessageYoutube = "Hmm... No Youtube results found for this song.";
+                youtubeBoxMessage = "🎶😅 Oops! No YouTube results for this track.";
                 return;
             }
 
@@ -176,14 +194,15 @@
         Console.WriteLine("clicked");
         try
         {
+            
 
             lyrics = await lyricsService.LyricsTextAsync(artistName, songName);
 
             if (string.IsNullOrEmpty(lyrics) || lyrics.Equals("Response is null") || lyrics.Equals("Unexpected character encountered while parsing value: <. Path '', line 0, position 0."))
             {
 
-                lyrics = "Hmm... No lyrics found for this song.";
-                errorMessageLyrics = "Hmm... No lyrics found for this song.";
+                errorMessageLyrics = ""; 
+                lyrics = "🤔🎶 Hmm... No lyrics found for this song. 🔍";
                 return;
             }
 
@@ -201,7 +220,7 @@
         catch (Exception ex)
         {
             // errorMessageLyrics = ex.Message;
-            lyrics = "Hmm... No lyrics found for this song.";
+            lyrics = "🤔🎶 Hmm... No lyrics found for this song. 🔍";
 
         }
     }
@@ -238,7 +257,7 @@
         }
         else
         {
-            errorMessageInput = "Search must be filled in.";
+            errorMessageInput = "😅🔎 Oops! You need to fill in the search first.";
             return;
         }
     }

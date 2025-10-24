@@ -27,7 +27,7 @@
     private string debugMessage = "";
     private int currentCount = 0;
 
-    private FetchLyricsService lyricsService = new FetchLyricsService();
+    private FetchLyricsService lyricsService = new FetchLyricsService(new RestSharp.RestClient("https://api.lyrics.ovh/v1/"));
 
     private async Task FetchLyrics()
     {
